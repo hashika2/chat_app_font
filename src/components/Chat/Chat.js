@@ -18,7 +18,7 @@ const Chat = ({ location,afterPostMessage,chatData ,getRoomData}) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   //const ENDPOINT = 'https://sleepy-castle-27435.herokuapp.com/'
-  const ENDPOINT ='localhost:5000'
+  const ENDPOINT ='https://chat-backend-server.herokuapp.com'
   //const ENDPOINT= 'https://git.heroku.com/chat-app-my.git';
 
   useEffect(() => { 
