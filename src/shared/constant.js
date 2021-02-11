@@ -1,4 +1,4 @@
-export const API = 'http://localhost:5000';
+export const API = 'https://chat-backend-server.herokuapp.com/';
 export const Bearer = 'Bearer';
 export const Authorization = 'Authorization';
 export const config = {
