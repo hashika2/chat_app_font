@@ -5,7 +5,7 @@ import { setAlert } from '../action/alert';
 import { register } from '../action/index';
 import PropTypes from 'prop-types';
 
-const Register = ({ register, isAuthenticated ,setAlert}) => {
+const Register = ({ register, isAuthenticated ,alert}) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,7 +14,7 @@ const Register = ({ register, isAuthenticated ,setAlert}) => {
   });
 
   const { name, email, password, password2 } = formData;
-
+  let error = "";
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
   const onSubmit = async e => {
@@ -29,13 +29,17 @@ const Register = ({ register, isAuthenticated ,setAlert}) => {
   };
   if (isAuthenticated) {
     console.log(isAuthenticated)
-    return <Redirect to='/join' />;
+    return <Redirect to={`/join?email=${email}`} />;
+  }
+  if(alert.alertType === 'danger') {
+   error = 'Invalid input Details'
   }
 
   return (
     <Fragment>
       <div className="container" style={{backgroundColor:"black"}}>
       <div className="card" style={{marginTop:"20%"}}>
+      <p style={{backgroundColor:"red" ,textAlign:"center" ,color:"white"}}>{error}</p>
       <form className='text-center border border-light p-5' onSubmit={e => onSubmit(e)}>
       <p class="h4 mb-4">Sign Up</p>
         <div className='form-group'>
@@ -92,11 +96,12 @@ const Register = ({ register, isAuthenticated ,setAlert}) => {
 Register.propTypes = {
   //setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool
+  isAuthenticated: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  alert:state.alert.alert_data
 });
 
 export default connect(

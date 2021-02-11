@@ -23,7 +23,7 @@ export const roommed = ({ name, room }) => async (dispatch) => {
 
 export const register = ({ name, email, password }) => async (dispatch) => {
   const body = {
-    name,
+    username:name,
     email,
     password,
   };
