@@ -9,6 +9,7 @@ import ImageUploading from "react-images-uploading";
 import "./Join.css";
 import { API, Bearer } from "../../shared/constant";
 import { getUsers } from "../../action/getUsers";
+// import {AlertMessageShower} from "../AlertMessageShower";
 
 const SignIn = ({
   roommed,
@@ -21,18 +22,22 @@ const SignIn = ({
   const [name, setName] = useState("");
   const [room, setRoom] = useState("");
   const [selectedImage, setImage] = useState("");
+  const [pictures, setPicture] = useState([]);
+  const [timeout, setTimeOut] = useState(false);
   const students = "Students";
   const officers = "Officers";
   const clients = "Clients";
   const developers = "Developers";
   const privateRoom = "Private";
-  const [pictures, setPicture] = useState([]);
   /**get email from the link**/
   const { email } = queryString.parse(location.search);
-  const userEmail =  authToken.token.user;
+  const userEmail = authToken.token.user;
 
   useEffect(() => {
     getUsers(accessToken);
+    setTimeout(() => {
+      setTimeOut(true);
+    }, 50000);
   }, []);
 
   const onSubmit = (e) => {
@@ -65,9 +70,31 @@ const SignIn = ({
   };
 
   const getPrivateChatMessage = () => {};
+  const AlertMessageShower = () => {
+    if (timeout) {
+      return (
+        <div
+          class="alert alert-warning alert-dismissible fade show"
+          role="alert"
+        >
+          <strong>Warning!</strong> Session will expire soon 
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <Fragment>
+      <AlertMessageShower timeout={timeout} />
       <div className="joinOuterContainer">
         <div className="joinInnerContainer">
           <ImageUploading
