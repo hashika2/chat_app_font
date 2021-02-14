@@ -16,19 +16,19 @@ const store = createStore(
 
 // set up a store subscription listener
 // to store the users token in localStorage
-
 let currentState = { ...initialState };
 
 store.subscribe(() => {
   // keep track of the previous and current state to compare changes
   let previousState = currentState;
   currentState = store.getState();
-  // if the token changes set the value in localStorage and axios headers
-  if (previousState.auth.token !== currentState.auth.token) {
-    const token = currentState.auth.token;
+  /**  if the token changes set the value in localStorage and axios headers **/
+  if (previousState.auth.data.token.accessToken !== currentState.auth.data.token.accessToken) {
+    const currentToken = currentState.auth.data.token.accessToken;
     // setAuthToken(token);
-    localStorage.setItem("token",token)
+    localStorage.setItem("token",currentToken)
   }
+  localStorage.setItem("token",previousState.auth.data.token.accessToken)
 });
 
 export default store;
