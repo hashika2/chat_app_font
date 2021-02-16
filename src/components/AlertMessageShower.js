@@ -1,25 +1,33 @@
-import React from "react";
- 
- const AlertMessageShower =({timeout})=>{
-  if (timeout) {
-        return (
-          <div
-            class="alert alert-warning alert-dismissible fade show"
-            role="alert"
-          >
-            <strong>Warning!</strong> Session will expire soon
-            <button
-              type="button"
-              class="close"
-              data-dismiss="alert"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        );
-      }
-      return null;
-}
+import React, { useState } from "react";
+import { Alert } from "reactstrap";
+import { useHistory } from "react-router-dom";
 
-export default AlertMessageShower
+const AlertMessageShower = ({ timeout }) => {
+  const [timeOut, setTime] = useState(timeout);
+  const history = useHistory();
+
+  const setLogin = () => {
+    setTime(false);
+    history.push("/");
+    localStorage.removeItem("token");
+  };
+
+  if (timeout) {
+    return (
+      <Alert severity="warning">
+        This is an error alert — <strong>Session Expired</strong>
+        <br></br>
+        <input
+          type="submit"
+          className="btn btn-primary"
+          value="login"
+          onClick={setLogin}
+        />
+        <input type="submit" className="btn btn-danger" value="close" />
+      </Alert>
+    );
+  }
+  return null;
+};
+
+export default AlertMessageShower;
