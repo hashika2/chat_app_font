@@ -11,7 +11,6 @@ export const getUsers = (authToken)=> async dispatch => {
             }
         }
         const res = await axios.get(`${API}/api/user/getUsers`,config);
-        console.log(res)
         dispatch({
             type: LOGGED_USER,  
             payload: res.data
