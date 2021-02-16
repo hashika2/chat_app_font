@@ -23,7 +23,7 @@ export const roommed = ({ name, room }) => async (dispatch) => {
 
 export const register = ({ name, email, password }) => async (dispatch) => {
   const body = {
-    username:name,
+    username: name,
     email,
     password,
   };
@@ -64,13 +64,16 @@ export const login = ({ email, password }) => async (dispatch) => {
       body,
       config
     );
+    // localStorage.setItem("token", res.data.token.accessToken);
+    // localStorage.setItem("email", res.data.token.user);
+
     dispatch({
       type: "USER_LOGGED",
       payload: res.data,
     });
   } catch (error) {
     if (error) {
-      console.log("error   " + error);
+      console.log("error  " + error);
       // error.map(error => { dispatch(setAlert(error,'danger'))});
       dispatch(setAlert(error, "danger"));
     }

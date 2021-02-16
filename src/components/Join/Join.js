@@ -1,5 +1,5 @@
 import React, { useState, Fragment, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { roommed } from "../../action/index";
 import { connect } from "react-redux";
 import queryString from "query-string";
@@ -9,7 +9,7 @@ import ImageUploading from "react-images-uploading";
 import "./Join.css";
 import { API, Bearer } from "../../shared/constant";
 import { getUsers } from "../../action/getUsers";
-// import {AlertMessageShower} from "../AlertMessageShower";
+import AlertMessageShower from "../AlertMessageShower";
 
 const SignIn = ({
   roommed,
@@ -31,34 +31,37 @@ const SignIn = ({
   const privateRoom = "Private";
   /**get email from the link**/
   const { email } = queryString.parse(location.search);
-  const userEmail = authToken.token.user;
+  const history = useHistory();
+  let msg = null;
+  const accessToken = localStorage.getItem("token");
+  const userEmail = localStorage.getItem("email");
 
   useEffect(() => {
-    getUsers(accessToken);
+    // getUsers(accessToken);
     setTimeout(() => {
       setTimeOut(true);
-    }, 50000);
+    }, 10000);
   }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (isAuthenticated) {
+      return <Redirect to={`/chat?name=${name}&room=${room}`} />;
+    }
   };
-
-  if (isAuthenticated) {
-    return <Redirect to={`/chat?name=${name}&room=${room}`} />;
-  }
 
   const onChangeHandler = (event) => {
     setImage(event.target.files[0]);
   };
-  let msg = null;
-  let accessToken = authToken.token.accessToken;
+
   const fielUploadHandler = (event) => {
     const formData = new FormData();
     formData.append("file", selectedImage);
     axios
       .post(`${API}/api/user/upload`, formData, {
-        headers: { Authorization: `${Bearer} ${accessToken}` },
+        headers: {
+          Authorization: `${Bearer} ${localStorage.getItem("token")}`,
+        },
       })
       .then((res) => {
         msg = res.data.message;
@@ -69,130 +72,126 @@ const SignIn = ({
     setPicture(pictures.concat(picture));
   };
 
-  const getPrivateChatMessage = () => {};
-  const AlertMessageShower = () => {
-    if (timeout) {
-      return (
-        <div
-          class="alert alert-warning alert-dismissible fade show"
-          role="alert"
-        >
-          <strong>Warning!</strong> Session will expire soon 
-          <button
-            type="button"
-            class="close"
-            data-dismiss="alert"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      );
-    }
-    return null;
+  const setLogout = () => {
+    localStorage.clear("token");
+    localStorage.clear("email");
+    history.push("/");
   };
+
+  const getPrivateChatMessage = () => {};
 
   return (
     <Fragment>
       <AlertMessageShower timeout={timeout} />
-      <div className="joinOuterContainer">
-        <div className="joinInnerContainer">
-          <ImageUploading
-            mode="multiple"
-            onChange={onChange}
-            withIcon={true}
-            buttonText="Choose images"
-            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-            maxFileSize={5242880}
-          ></ImageUploading>
-          <p
-            style={{
-              backgroundColor: "green",
-              textAlign: "center",
-              color: "white",
-            }}
-          >
-            {msg}
-          </p>
-          <h1 className="heading">Rooms</h1>
-          <Link to={`/chat?name=${userEmail}&room=${students}`}>
-            <button className={"button mt-20"} type="submit">
-              Students
-            </button>
-          </Link>
-          <Link
-            to={`/chat?name=${userEmail}&room=${officers}`}
-            onClick={(e) => getRoomData(officers)}
-          >
-            <button className={"button mt-20"} type="submit">
-              Officers
-            </button>
-          </Link>
-          <Link to={`/chat?name=${userEmail}&room=${clients}`}>
-            <button className={"button mt-20"} type="submit">
-              Clients
-            </button>
-          </Link>
-          <Link to={`/chat?name=${userEmail}&room=${developers}`}>
-            <button className={"button mt-20"} type="submit">
-              Developers
-            </button>
-          </Link>
-        </div>
-        <div className="joinInnerContainer">
-          <h1 className="heading">Join</h1>
-          <form onSubmit={(e) => onSubmit(e)}>
-            <div>
-              <input
-                placeholder="Name"
-                className="joinInput"
-                type="text"
-                onChange={(event) => setName(event.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                placeholder="Room"
-                className="joinInput mt-20"
-                type="text"
-                onChange={(event) => setRoom(event.target.value)}
-              />
-            </div>
-            <Link
-              onClick={(e) =>
-                !name || !room ? e.preventDefault() : getRoomData(room)
-              }
-              to={`/chat?name=${name}&room=${room}`}
-            >
-              <button className={"button mt-20"} type="submit">
-                Sign In
-              </button>
-            </Link>
-            <Link to={`/privateChat?name=${email}&room=${privateRoom}`}>
-              <button
-                className={"button mt-20"}
-                onClick={getPrivateChatMessage}
-                type="submit"
+      <Link to={"/"} onClick={setLogout} className="">
+        Sign Out
+      </Link>
+      {/* <SessionExpirationModal/> */}
+      <div className="row">
+        {/* <div className="col-md-8"></div> */}
+        <div className="col-sm-7 pr-2">
+          <div className="container">
+            <div className="container">
+              <ImageUploading
+                mode="multiple"
+                onChange={onChange}
+                withIcon={true}
+                buttonText="Choose images"
+                imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+                maxFileSize={5242880}
+              ></ImageUploading>
+              <p
+                style={{
+                  backgroundColor: "green",
+                  textAlign: "center",
+                  color: "white",
+                }}
               >
-                Private Message
+                {msg}
+              </p>
+              <h1 className="heading">Rooms</h1>
+              <Link to={`/chat?name=${userEmail}&room=${students}`}>
+                <button className={"button mt-20"} type="submit">
+                  Students
+                </button>
+              </Link>
+              <Link
+                to={`/chat?name=${userEmail}&room=${officers}`}
+                onClick={(e) => getRoomData(officers)}
+              >
+                <button className={"button mt-20"} type="submit">
+                  Officers
+                </button>
+              </Link>
+              <Link to={`/chat?name=${userEmail}&room=${clients}`}>
+                <button className={"button mt-20"} type="submit">
+                  Clients
+                </button>
+              </Link>
+              <Link to={`/chat?name=${userEmail}&room=${developers}`}>
+                <button className={"button mt-20"} type="submit">
+                  Developers
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="col-sm-4 ">
+          <div className="container">
+            <h1 className="heading">Join</h1>
+            <form onSubmit={(e) => onSubmit(e)}>
+              <div>
+                <input
+                  placeholder="Name"
+                  className="joinInput"
+                  type="text"
+                  onChange={(event) => setName(event.target.value)}
+                />
+              </div>
+              <div>
+                <input
+                  placeholder="Room"
+                  className="joinInput mt-20"
+                  type="text"
+                  onChange={(event) => setRoom(event.target.value)}
+                />
+              </div>
+              <Link
+                onClick={(e) =>
+                  !name || !room ? e.preventDefault() : getRoomData(room)
+                }
+                to={`/chat?name=${name}&room=${room}`}
+              >
+                <button className={"button mt-20"} type="submit">
+                  Sign In
+                </button>
+              </Link>
+              <Link to={`/privateChat?name=${email}&room=${privateRoom}`}>
+                <button
+                  className={"button mt-20"}
+                  onClick={getPrivateChatMessage}
+                  type="submit"
+                >
+                  Private Message
+                </button>
+              </Link>
+              <input
+                type="file"
+                className="btn btn-warning btn-lg btn-block mt-20"
+                onChange={onChangeHandler}
+                ref={(fileInput) => (fileInput = fileInput)}
+              ></input>
+              <button
+                onClick={fielUploadHandler}
+                className="btn btn-primary btn-lg btn-block mt-20"
+              >
+                {" "}
+                Upload{" "}
               </button>
-            </Link>
-            <input
-              type="file"
-              className="btn btn-warning btn-lg btn-block mt-20"
-              onChange={onChangeHandler}
-              ref={(fileInput) => (fileInput = fileInput)}
-            ></input>
-            <button
-              onClick={fielUploadHandler}
-              className="btn btn-primary btn-lg btn-block mt-20"
-            >
-              {" "}
-              Upload{" "}
-            </button>
-            {/* <button onClick={(fileInput)=>{fileInput.click()}}>Pick Image</button>
+              {/* <button onClick={(fileInput)=>{fileInput.click()}}>Pick Image</button>
             <button onClick={fielUploadHandler}>Upload</button> */}
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </Fragment>
