@@ -15,6 +15,7 @@ export default function(state=initialesState, action){
         case 'USER_LOGGED':
             return{
                 ...state,
+                token:action.payload.token.accessToken,
                 data:action.payload,
                 isAuthenticated:true
             }
