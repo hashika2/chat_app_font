@@ -26,7 +26,6 @@ store.subscribe(() => {
   if (previousState.auth.token !== currentState.auth.token) {
     const currentToken = currentState.auth.token;
     localStorage.setItem("token", currentToken);
-
     // setAuthToken(token);
   }
   localStorage.setItem("token", currentState.auth.token);
