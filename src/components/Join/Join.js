@@ -23,7 +23,9 @@ const SignIn = ({
   const [room, setRoom] = useState("");
   const [selectedImage, setImage] = useState("");
   const [pictures, setPicture] = useState([]);
-  const [image,setImagePicker] =  useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpd4mJRIUwqgE8D_Z2znANEbtiz4GhI4M8NQ&usqp=CAU')
+  const [image, setImagePicker] = useState(
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpd4mJRIUwqgE8D_Z2znANEbtiz4GhI4M8NQ&usqp=CAU"
+  );
   const [timeout, setTimeOut] = useState(false);
   const students = "Students";
   const officers = "Officers";
@@ -53,8 +55,7 @@ const SignIn = ({
 
   const onChangeHandler = (event) => {
     setImage(event.target.files[0]);
-    setImagePicker(event.target.files[0].name)
-
+    setImagePicker(URL.createObjectURL(event.target.files[0]));
   };
 
   const fielUploadHandler = (event) => {
@@ -90,7 +91,14 @@ const SignIn = ({
       {/* <SessionExpirationModal/> */}
       <div class="row">
         <div class="col text-center">
-        <img src={image} class="rounded-circle" alt="Cinque Terre" width="230" height="200"/><br></br>
+          <img
+            src={image}
+            class="rounded-circle"
+            alt="Cinque Terre"
+            width="230"
+            height="200"
+          />
+          <br></br>
           <Link to={"/"} onClick={setLogout} className="">
             Sign Out
           </Link>
