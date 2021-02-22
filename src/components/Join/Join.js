@@ -43,7 +43,7 @@ const SignIn = ({
     // getUsers(accessToken);
     setTimeout(() => {
       setTimeOut(true);
-    }, 10000);
+    }, 500000);
   }, []);
 
   const onSubmit = (e) => {
@@ -56,6 +56,7 @@ const SignIn = ({
   const onChangeHandler = (event) => {
     setImage(event.target.files[0]);
     setImagePicker(URL.createObjectURL(event.target.files[0]));
+    localStorage.setItem('image',URL.createObjectURL(event.target.files[0]))
   };
 
   const fielUploadHandler = (event) => {

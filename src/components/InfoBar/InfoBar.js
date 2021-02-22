@@ -14,7 +14,7 @@ const InfoBar = ({ room ,getData}) => (
       <h3>{room}</h3>
     </div>
     <div className="rightInnerContainer">
-     <Link to='/' style={{color:"black"}}>logout</Link> 
+     {/* <Link to='/' style={{color:"black"}}>logout</Link>  */}
       <input type="submit" value="setting" onClick={e => getData(e)}/>
       <a href="/"><img src={closeIcon} alt="close icon" /></a>
     </div>

@@ -8,8 +8,8 @@ const AlertMessageShower = ({ timeout }) => {
 
   const setLogin = () => {
     setTime(false);
-    history.push("/");
     localStorage.removeItem("token");
+    history.push("/");
   };
 
   if (timeout) {
