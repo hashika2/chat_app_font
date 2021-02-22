@@ -1,6 +1,9 @@
 import axios from "axios";
 import { setAlert } from "./alert";
 import environment from "../components/environment/env.json";
+import ROOMED from './types';
+import USER_REGISTERED from './types';
+import REGISTER_FAIL from './types';
 
 const config = {
   headers: {
@@ -16,7 +19,7 @@ export const roommed = ({ name, room }) => async (dispatch) => {
     room: room,
   };
   dispatch({
-    type: "ROOMED",
+    type: ROOMED,
     payload: res,
   });
 };
@@ -31,7 +34,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
     const res = await axios.post(`${environment.baseUrl}/user`, body, config);
 
     dispatch({
-      type: "USER_REGISTERED",
+      type: USER_REGISTERED,
       payload: res.data,
     });
     alertData(res.data);
@@ -41,16 +44,9 @@ export const register = ({ name, email, password }) => async (dispatch) => {
       dispatch(setAlert(error, "danger"));
     }
     dispatch({
-      type: "REGISTER_FAIL",
+      type: REGISTER_FAIL,
     });
   }
-};
-
-const alertData = (data) => async (dispatch) => {
-  dispatch({
-    type: "ALERTMESSAGE",
-    payload: data,
-  });
 };
 
 export const login = ({ email, password }) => async (dispatch) => {
@@ -65,7 +61,7 @@ export const login = ({ email, password }) => async (dispatch) => {
       config
     );
     // localStorage.setItem("token", res.data.token.accessToken);
-    // localStorage.setItem("email", res.data.token.user);
+    localStorage.setItem("email", res.data.token.user);
 
     dispatch({
       type: "USER_LOGGED",
@@ -82,6 +78,14 @@ export const login = ({ email, password }) => async (dispatch) => {
     });
   }
 };
+
+const alertData = (data) => async (dispatch) => {
+  dispatch({
+    type: "ALERTMESSAGE",
+    payload: data,
+  });
+};
+
 export const getRoomData = (room) => async (dispatch) => {
   const body = { room };
   const res = await axios.get(
