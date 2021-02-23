@@ -1,9 +1,9 @@
 import axios from "axios";
 import { setAlert } from "./alert";
 import environment from "../components/environment/env.json";
-import ROOMED from './types';
-import USER_REGISTERED from './types';
-import REGISTER_FAIL from './types';
+import ROOMED from "./types";
+import USER_REGISTERED from "./types";
+import REGISTER_FAIL from "./types";
 
 const config = {
   headers: {
@@ -76,6 +76,18 @@ export const login = ({ email, password }) => async (dispatch) => {
     dispatch({
       type: "LOGIN_FAIL",
     });
+  }
+};
+
+export const googleSignIn = (response) => async (dispatch) => {
+  try {
+    localStorage.setItem('token',response)
+    dispatch({
+      type: "GOOGLE_SIGNIN",
+      data: response,
+    });
+  } catch (error) {
+    dispatch(setAlert(error, "danger"));
   }
 };
 

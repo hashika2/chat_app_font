@@ -1,13 +1,14 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
+import environment from "../components/environment/env.json";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { login } from "../action/index";
+import { login,googleSignIn } from "../action/index";
 import IdleTimeOut from "../components/timeoutSession/IdleTimeOut";
 import TextField from "@material-ui/core/TextField";
 import GoogleLogin from "react-google-login";
 
-const Login = ({ login, isAuthenticated, alert, data }) => {
+const Login = ({ login,googleSignIn, isAuthenticated, alert, data }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -33,13 +34,12 @@ const Login = ({ login, isAuthenticated, alert, data }) => {
     error = "Invalid Username and Password";
   }
 
-  const responseGoogle = (response) => {
-    console.log(response);
+  const responseGoogle = async (response) => {
     var res = response.profileObj;
-    console.log(res);
-    // debugger;
+    localStorage.setItem('email',res.email)
+    setFormData({...formData,[email]:res.email})
+    googleSignIn(await response.accessToken);
     history.push(`/join?email=${res.email}`);
-    // signup(response);
   };
 
   return (
@@ -92,8 +92,9 @@ const Login = ({ login, isAuthenticated, alert, data }) => {
               <div className="col-sm-12">
                 <div className="col-sm-4"></div>
                 <div className="col-sm-6">
+                  <br></br>
                   <GoogleLogin
-                    clientId="539255563878-la2cnr37vdn5i8gtj3dit6fc41pebr0e.apps.googleusercontent.com"
+                    clientId={environment.clientId}
                     buttonText="Login with Google"
                     onSuccess={responseGoogle}
                     onFailure={responseGoogle}
@@ -122,4 +123,4 @@ const mapStateToProps = (state) => ({
   alert: state.alert.alert_data,
 });
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, { login,googleSignIn })(Login);

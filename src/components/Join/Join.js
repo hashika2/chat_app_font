@@ -10,6 +10,7 @@ import "./Join.css";
 import { API, Bearer } from "../../shared/constant";
 import { getUsers } from "../../action/getUsers";
 import AlertMessageShower from "../AlertMessageShower";
+import GoogleLogin from "react-google-login";
 
 const SignIn = ({
   roommed,
@@ -65,7 +66,7 @@ const SignIn = ({
     axios
       .post(`${API}/api/user/upload`, formData, {
         headers: {
-          Authorization: `${Bearer} ${localStorage.getItem("token")}`,
+          Authorization: `${Bearer} ${localStorage.getItem("token") || GoogleLogin.Authorization}`,
         },
       })
       .then((res) => {
@@ -216,7 +217,7 @@ const SignIn = ({
   );
 };
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.registeredRoom,
+  isAuthenticated: state.auth.isAuthenticated,
   authToken: state.auth.data,
 });
 export default connect(mapStateToProps, { roommed, getRoomData, getUsers })(
