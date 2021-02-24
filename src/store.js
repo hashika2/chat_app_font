@@ -29,7 +29,7 @@ store.subscribe(() => {
     // setAuthToken(token);
   }
   localStorage.setItem("token", currentState.auth.token);
-  // localStorage.setItem("token",previousState.auth.token)
+  // localStorage.setItem("token",previousState.auth.token.user)
 });
 
 export default store;

@@ -10,6 +10,7 @@ import "./Join.css";
 import { API, Bearer } from "../../shared/constant";
 import { getUsers } from "../../action/getUsers";
 import AlertMessageShower from "../AlertMessageShower";
+import GoogleLogin from "react-google-login";
 
 const SignIn = ({
   roommed,
@@ -23,6 +24,9 @@ const SignIn = ({
   const [room, setRoom] = useState("");
   const [selectedImage, setImage] = useState("");
   const [pictures, setPicture] = useState([]);
+  const [image, setImagePicker] = useState(
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpd4mJRIUwqgE8D_Z2znANEbtiz4GhI4M8NQ&usqp=CAU"
+  );
   const [timeout, setTimeOut] = useState(false);
   const students = "Students";
   const officers = "Officers";
@@ -40,7 +44,7 @@ const SignIn = ({
     // getUsers(accessToken);
     setTimeout(() => {
       setTimeOut(true);
-    }, 10000);
+    }, 500000);
   }, []);
 
   const onSubmit = (e) => {
@@ -52,6 +56,8 @@ const SignIn = ({
 
   const onChangeHandler = (event) => {
     setImage(event.target.files[0]);
+    setImagePicker(URL.createObjectURL(event.target.files[0]));
+    localStorage.setItem('image',URL.createObjectURL(event.target.files[0]))
   };
 
   const fielUploadHandler = (event) => {
@@ -60,7 +66,7 @@ const SignIn = ({
     axios
       .post(`${API}/api/user/upload`, formData, {
         headers: {
-          Authorization: `${Bearer} ${localStorage.getItem("token")}`,
+          Authorization: `${Bearer} ${localStorage.getItem("token") || GoogleLogin.Authorization}`,
         },
       })
       .then((res) => {
@@ -83,10 +89,23 @@ const SignIn = ({
   return (
     <Fragment>
       <AlertMessageShower timeout={timeout} />
-      <Link to={"/"} onClick={setLogout} className="">
-        Sign Out
-      </Link>
+
       {/* <SessionExpirationModal/> */}
+      <div class="row">
+        <div class="col text-center">
+          <img
+            src={image}
+            class="rounded-circle"
+            alt="Cinque Terre"
+            width="230"
+            height="200"
+          />
+          <br></br>
+          <Link to={"/"} onClick={setLogout} className="">
+            Sign Out
+          </Link>
+        </div>
+      </div>
       <div className="row">
         {/* <div className="col-md-8"></div> */}
         <div className="col-sm-7 pr-2">
@@ -198,7 +217,7 @@ const SignIn = ({
   );
 };
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.registeredRoom,
+  isAuthenticated: state.auth.isAuthenticated,
   authToken: state.auth.data,
 });
 export default connect(mapStateToProps, { roommed, getRoomData, getUsers })(

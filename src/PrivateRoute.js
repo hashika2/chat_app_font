@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-const isAuth = localStorage.getItem('token')
+const isAuth = localStorage.getItem('isAuthenticated')
 
 const PrivateRoute = ({
   component: Component,
@@ -12,7 +12,7 @@ const PrivateRoute = ({
   <Route
     {...rest}
     render={props =>
-      isAuth ? <Component {...props} /> : <Redirect to="/" />
+      isAuthenticated ? <Component {...props} /> : <Redirect to="/" />
     }
   />
 );

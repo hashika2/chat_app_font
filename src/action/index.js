@@ -1,6 +1,9 @@
 import axios from "axios";
 import { setAlert } from "./alert";
 import environment from "../components/environment/env.json";
+import ROOMED from "./types";
+import USER_REGISTERED from "./types";
+import REGISTER_FAIL from "./types";
 
 const config = {
   headers: {
@@ -16,7 +19,7 @@ export const roommed = ({ name, room }) => async (dispatch) => {
     room: room,
   };
   dispatch({
-    type: "ROOMED",
+    type: ROOMED,
     payload: res,
   });
 };
@@ -31,26 +34,18 @@ export const register = ({ name, email, password }) => async (dispatch) => {
     const res = await axios.post(`${environment.baseUrl}/user`, body, config);
 
     dispatch({
-      type: "USER_REGISTERED",
+      type: USER_REGISTERED,
       payload: res.data,
     });
     alertData(res.data);
   } catch (error) {
     if (error) {
-      console.log("error " + error);
-      dispatch(setAlert(error, "danger"));
+      dispatch(setAlert(error.response.data.error, "danger"));
     }
-    dispatch({
-      type: "REGISTER_FAIL",
-    });
+    // dispatch({
+    //   type: REGISTER_FAIL,
+    // });
   }
-};
-
-const alertData = (data) => async (dispatch) => {
-  dispatch({
-    type: "ALERTMESSAGE",
-    payload: data,
-  });
 };
 
 export const login = ({ email, password }) => async (dispatch) => {
@@ -65,23 +60,41 @@ export const login = ({ email, password }) => async (dispatch) => {
       config
     );
     // localStorage.setItem("token", res.data.token.accessToken);
-    // localStorage.setItem("email", res.data.token.user);
+    localStorage.setItem("email", res.data.token.user);
 
     dispatch({
       type: "USER_LOGGED",
       payload: res.data,
     });
+    dispatch(setAlert("login Successfull", "success"));
+
   } catch (error) {
-    if (error) {
-      console.log("error  " + error);
-      // error.map(error => { dispatch(setAlert(error,'danger'))});
-      dispatch(setAlert(error, "danger"));
+    if (error.response.status === 400) {
+      console.log("error  " + error.response.data);
     }
-    dispatch({
-      type: "LOGIN_FAIL",
-    });
+    dispatch(setAlert(error.response.data.error, "danger"));
   }
 };
+
+export const googleSignIn = (response) => async (dispatch) => {
+  try {
+    localStorage.setItem("token", response);
+    dispatch({
+      type: "GOOGLE_SIGNIN",
+      data: response,
+    });
+  } catch (error) {
+    dispatch(setAlert(error, "danger"));
+  }
+};
+
+const alertData = (data) => async (dispatch) => {
+  dispatch({
+    type: "ALERTMESSAGE",
+    payload: data,
+  });
+};
+
 export const getRoomData = (room) => async (dispatch) => {
   const body = { room };
   const res = await axios.get(

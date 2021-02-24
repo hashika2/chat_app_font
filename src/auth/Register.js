@@ -28,11 +28,10 @@ const Register = ({ register, isAuthenticated ,alert}) => {
     register({ name, email, password });
   };
   if (isAuthenticated) {
-    console.log(isAuthenticated)
     return <Redirect to={`/join?email=${email}`} />;
   }
   if(alert.alertType === 'danger') {
-   error = 'Invalid input Details'
+   error = `${alert.msg}`
   }
 
   return (
