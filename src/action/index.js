@@ -40,12 +40,11 @@ export const register = ({ name, email, password }) => async (dispatch) => {
     alertData(res.data);
   } catch (error) {
     if (error) {
-      console.log("error " + error);
-      dispatch(setAlert(error, "danger"));
+      dispatch(setAlert(error.response.data.error, "danger"));
     }
-    dispatch({
-      type: REGISTER_FAIL,
-    });
+    // dispatch({
+    //   type: REGISTER_FAIL,
+    // });
   }
 };
 

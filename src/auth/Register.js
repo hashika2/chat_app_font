@@ -31,7 +31,7 @@ const Register = ({ register, isAuthenticated ,alert}) => {
     return <Redirect to={`/join?email=${email}`} />;
   }
   if(alert.alertType === 'danger') {
-   error = 'Invalid input Details'
+   error = `${alert.msg}`
   }
 
   return (
