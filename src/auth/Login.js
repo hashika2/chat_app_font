@@ -31,7 +31,7 @@ const Login = ({ login,googleSignIn, isAuthenticated, alert, data }) => {
     history.push(`/join?email=${email}`);
   }
   if (alert.alertType === "danger") {
-    error = "Invalid Username and Password";
+    error = `${alert.msg}`;
   }
 
   const responseGoogle = async (response) => {

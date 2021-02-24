@@ -67,21 +67,19 @@ export const login = ({ email, password }) => async (dispatch) => {
       type: "USER_LOGGED",
       payload: res.data,
     });
+    dispatch(setAlert("login Successfull", "success"));
+
   } catch (error) {
-    if (error) {
-      console.log("error  " + error);
-      // error.map(error => { dispatch(setAlert(error,'danger'))});
-      dispatch(setAlert(error, "danger"));
+    if (error.response.status === 400) {
+      console.log("error  " + error.response.data);
     }
-    dispatch({
-      type: "LOGIN_FAIL",
-    });
+    dispatch(setAlert(error.response.data.error, "danger"));
   }
 };
 
 export const googleSignIn = (response) => async (dispatch) => {
   try {
-    localStorage.setItem('token',response)
+    localStorage.setItem("token", response);
     dispatch({
       type: "GOOGLE_SIGNIN",
       data: response,

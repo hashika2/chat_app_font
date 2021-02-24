@@ -26,6 +26,11 @@ export default function (state = initialesState, action) {
         data: action.payload,
         isAuthenticated: true,
       };
+    case "LOGIN_FAIL":
+      return{
+        ...state,
+        data:action.payload
+      }
 
     default:
       return state;
