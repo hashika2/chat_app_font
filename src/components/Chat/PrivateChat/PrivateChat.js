@@ -43,13 +43,12 @@ const PrivateChat = ({
     socket.on("message", (message) => {
       setMessages((messages) => [...messages, message]);
     });
-    console.log(currentUsers)
+    console.log(currentUsers);
     const users = _getUsersDate(currentUsers);
     setUsers(users);
     // socket.on("output data", (currentUsers) => {
     //   console.log(currentUsers);
     //   afterPostMessage(currentUsers);
-     
 
     //   console.log(users);
     //   setUsers(users);
@@ -86,7 +85,7 @@ const PrivateChat = ({
 
 const _getUsersDate = (currentUsers) => {
   let users = [];
-  currentUsers.forEach(currentUser => {
+  currentUsers.forEach((currentUser) => {
     let message = {
       user: currentUser.user.name,
     };
@@ -109,7 +108,7 @@ const _getUsersDate = (currentUsers) => {
 const mapStateToProps = (state) => ({
   chats: state.postMessage.chats,
   authToken: state.auth.data,
-  currentUsers: state.getRoomData.data
+  currentUsers: state.getRoomData.data,
 });
 
 export default connect(mapStateToProps, {
