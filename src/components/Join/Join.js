@@ -3,6 +3,8 @@ import { Link, Redirect, useHistory } from "react-router-dom";
 import { roommed } from "../../action/index";
 import { connect } from "react-redux";
 import queryString from "query-string";
+import GoogleLogin from "react-google-login";
+import Swal from 'sweetalert2'
 import axios from "axios";
 import { getRoomData } from "../../action/index";
 import ImageUploading from "react-images-uploading";
@@ -10,7 +12,6 @@ import "./Join.css";
 import { API, Bearer } from "../../shared/constant";
 import { getUsers } from "../../action/getUsers";
 import AlertMessageShower from "../AlertMessageShower";
-import GoogleLogin from "react-google-login";
 
 const SignIn = ({
   roommed,
@@ -45,7 +46,7 @@ const SignIn = ({
     getUserImage();
     setTimeout(() => {
       setTimeOut(true);
-    }, 5000);
+    }, 100000);
   }, []);
 
   const getUserImage = () => {};
@@ -75,7 +76,9 @@ const SignIn = ({
         },
       })
       .then((res) => {
+        console.log(res)
         msg = res.data.message;
+        Swal.fire('Successfully Uploaded')
       });
   };
 

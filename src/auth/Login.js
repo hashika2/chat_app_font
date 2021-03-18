@@ -4,9 +4,9 @@ import environment from "../components/environment/env.json";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { login, googleSignIn } from "../action/index";
-import IdleTimeOut from "../components/timeoutSession/IdleTimeOut";
 import TextField from "@material-ui/core/TextField";
 import GoogleLogin from "react-google-login";
+import ErroShowing from "../shared/Error";
 
 const Login = ({ login, googleSignIn, isAuthenticated, alert, data }) => {
   const [formData, setFormData] = useState({
@@ -15,49 +15,36 @@ const Login = ({ login, googleSignIn, isAuthenticated, alert, data }) => {
   });
   const { email, password } = formData;
   const [iserror, setError] = useState(false);
+  const [alertMessage,setAlertMessage] = useState()
   let error = "";
-  let msgColor = "";
   const history = useHistory();
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    login({ email, password });
+    await login({ email, password });
+    setTimeout(() => {
+      setError(false);
+    }, 10000);
+  };
+
+  const setAlert = (alert) => {
+    if (alert.alertType === "danger") {
+      error = alert.msg;
+      setError(true);
+      setAlertMessage(alert.msg)
+    }
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setError(false);
-    }, 5000);
+    setAlert(alert);
   });
 
   if (isAuthenticated) {
     // return <Redirect to={`/join?email=${email}`} />;
     history.push(`/join?email=${email}`);
   }
-  if (alert.alertType === "danger") {
-    error = alert.msg;
-    setError(true);
-    console.log(error);
-  }
-
-  const ErroShowing = ({ isError, is }) => {
-    if (isError) {
-      return (
-        <p
-          style={{
-            backgroundColor: "red",
-            textAlign: "center",
-            color: "white",
-          }}
-        >
-          {isError}
-        </p>
-      );
-    }
-    return <p></p>;
-  };
 
   const responseGoogle = async (response) => {
     //   var res = response.profileObj;
@@ -69,10 +56,9 @@ const Login = ({ login, googleSignIn, isAuthenticated, alert, data }) => {
 
   return (
     <Fragment>
-      {/* <IdleTimeOut/> */}
       <div className="container" style={{ backgroundColor: "black" }}>
         <div className="card" style={{ marginTop: "20%" }}>
-          <ErroShowing isError={iserror} />
+          {iserror?<ErroShowing isError={alertMessage} iserror={iserror} />:null}
           <form
             className="text-center border border-light p-5"
             onSubmit={(e) => onSubmit(e)}

@@ -67,12 +67,16 @@ export const login = ({ email, password }) => async (dispatch) => {
       payload: res.data,
     });
     dispatch(setAlert("login Successfull", "success"));
-
   } catch (error) {
     if (error.response.status === 400) {
-      console.log("error  " + error.response.data);
+      dispatch(setAlert(error.response.data.error, "danger"));
     }
-    dispatch(setAlert(error.response.data.error, "danger"));
+    if (error.response.status === 404) {
+      dispatch(setAlert("Invalid Inputs", "danger"));
+    }
+     else {
+      // dispatch(setAlert(error.response.data.error, "danger"));
+    }
   }
 };
 
