@@ -111,6 +111,9 @@ const SignIn = ({
           <br></br>
           <Link to={"/"} onClick={setLogout} className="">
             Sign Out
+          </Link><br></br>
+          <Link to={"/profile"} className="">
+            Profile
           </Link>
         </div>
       </div>

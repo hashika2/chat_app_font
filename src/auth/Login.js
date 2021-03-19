@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import environment from "../components/environment/env.json";
 import { connect } from "react-redux";
@@ -15,7 +15,7 @@ const Login = ({ login, googleSignIn, isAuthenticated, alert, data }) => {
   });
   const { email, password } = formData;
   const [iserror, setError] = useState(false);
-  const [alertMessage,setAlertMessage] = useState()
+  const [alertMessage, setAlertMessage] = useState();
   let error = "";
   const history = useHistory();
   const onChange = (e) =>
@@ -24,22 +24,31 @@ const Login = ({ login, googleSignIn, isAuthenticated, alert, data }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     await login({ email, password });
-    setTimeout(() => {
-      setError(false);
-    }, 10000);
+    // setTimeout(() => {
+    //   setError(false);
+    // }, 10000);
   };
 
   const setAlert = (alert) => {
     if (alert.alertType === "danger") {
       error = alert.msg;
       setError(true);
-      setAlertMessage(alert.msg)
+      setAlertMessage(alert.msg);
     }
   };
 
   useEffect(() => {
     setAlert(alert);
   });
+
+  // const shuffle = useCallback(() => {
+  //   setError(false);
+  // }, []);
+
+  // useEffect(() => {
+  //   const intervalID = setInterval(shuffle, 5000);
+  //   return () => clearInterval(intervalID);
+  // }, [shuffle]);
 
   if (isAuthenticated) {
     // return <Redirect to={`/join?email=${email}`} />;
@@ -58,7 +67,7 @@ const Login = ({ login, googleSignIn, isAuthenticated, alert, data }) => {
     <Fragment>
       <div className="container" style={{ backgroundColor: "black" }}>
         <div className="card" style={{ marginTop: "20%" }}>
-          {iserror?<ErroShowing isError={alertMessage} iserror={iserror} />:null}
+          <ErroShowing isError={alertMessage} iserror={iserror} />
           <form
             className="text-center border border-light p-5"
             onSubmit={(e) => onSubmit(e)}
