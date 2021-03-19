@@ -1,20 +1,23 @@
-import React from 'react'
+import React from "react";
 
-const ErroShowing = ({ isError ,iserror}) => {
+const ErroShowing = ({ isError, iserror }) => {
   if (iserror) {
     return (
-      <p
-        style={{
-          backgroundColor: "red",
-          textAlign: "center",
-          color: "white",
-        }}
-      >
+      <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
         {isError}
-      </p>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
     );
+  } else {
+    return null;
   }
-  return <p></p>;
 };
 
-  export default ErroShowing;
+export default ErroShowing;
