@@ -1,35 +1,39 @@
-import {  useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const history = useHistory();
 const timerLength = 40;
 
 function getMember() {
-  const memberInLocalStorage= window.localStorage.getItem('member') || '';
+  const memberInLocalStorage = window.localStorage.getItem("member") || "";
   if (!memberInLocalStorage) return null;
 
-  if (!window.localStorage.getItem('token')) {
-    window.localStorage.removeItem('member');
+  if (!window.localStorage.getItem("token")) {
+    window.localStorage.removeItem("member");
     return null;
   }
 
   try {
-    const member= JSON.parse(atob(memberInLocalStorage));
-    const issuedSeconds= isNaN(member.issuedSeconds) ? 0 : member.issuedSeconds; // Convert from string to number
-    const secondsSinceSignIn= Number(Math.floor(new Date().getTime() / 1000) - issuedSeconds);
+    const member = JSON.parse(atob(memberInLocalStorage));
+    const issuedSeconds = isNaN(member.issuedSeconds)
+      ? 0
+      : member.issuedSeconds; // Convert from string to number
+    const secondsSinceSignIn = Number(
+      Math.floor(new Date().getTime() / 1000) - issuedSeconds,
+    );
     const sessionSecondsRemaining = Number(timerLength - secondsSinceSignIn);
     member.sessionSecondsRemaining = sessionSecondsRemaining;
 
     if (sessionSecondsRemaining <= 0) {
-      window.localStorage.removeItem('token');
-      window.localStorage.removeItem('member');
+      window.localStorage.removeItem("token");
+      window.localStorage.removeItem("member");
       return null;
     }
 
     return member;
   } catch (err) {
     // Local storage has been tampered with
-    window.localStorage.removeItem('token');
-    window.localStorage.removeItem('member');
+    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("member");
     return null;
   }
 }
@@ -103,7 +107,7 @@ function getMember() {
 // }
 
 const extendSlidingExpiration = () => {
-  const memberInLocalStorage= window.localStorage.getItem('member');
+  const memberInLocalStorage = window.localStorage.getItem("member");
   if (!memberInLocalStorage) return 0;
 
   if (memberInLocalStorage) {
@@ -116,15 +120,15 @@ const extendSlidingExpiration = () => {
 
     const member = JSON.parse(atob(memberInLocalStorage));
     window.localStorage.setItem(
-      'member',
+      "member",
       window.btoa(
         JSON.stringify({
           memberKey: member.memberKey,
           firstName: member.firstName,
           lastName: member.lastName,
           issuedSeconds: Math.floor(new Date().getTime() / 1000),
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -143,15 +147,15 @@ const extendSlidingExpiration = () => {
 // };
 
 function getPage() {
-  let url= window.location.href.replace('http://', '').replace('https://', '');
-  if (url.indexOf('/') >= 0) {
-    const tempUrl = url.split('/');
-    url = '';
+  let url = window.location.href.replace("http://", "").replace("https://", "");
+  if (url.indexOf("/") >= 0) {
+    const tempUrl = url.split("/");
+    url = "";
     for (let i = 1; i < tempUrl.length; i++) {
       url += `/${tempUrl[i]}`;
     }
   }
-  if (url === '/') url = '';
+  if (url === "/") url = "";
   return url;
 }
 
@@ -192,4 +196,4 @@ function getPage() {
 //   }
 // }
 
-export { extendSlidingExpiration, getPage ,getMember};
+export { extendSlidingExpiration, getPage, getMember };

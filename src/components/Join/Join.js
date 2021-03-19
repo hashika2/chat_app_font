@@ -3,6 +3,8 @@ import { Link, Redirect, useHistory } from "react-router-dom";
 import { roommed } from "../../action/index";
 import { connect } from "react-redux";
 import queryString from "query-string";
+import GoogleLogin from "react-google-login";
+import Swal from 'sweetalert2'
 import axios from "axios";
 import { getRoomData } from "../../action/index";
 import ImageUploading from "react-images-uploading";
@@ -10,7 +12,6 @@ import "./Join.css";
 import { API, Bearer } from "../../shared/constant";
 import { getUsers } from "../../action/getUsers";
 import AlertMessageShower from "../AlertMessageShower";
-import GoogleLogin from "react-google-login";
 
 const SignIn = ({
   roommed,
@@ -25,7 +26,7 @@ const SignIn = ({
   const [selectedImage, setImage] = useState("");
   const [pictures, setPicture] = useState([]);
   const [image, setImagePicker] = useState(
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpd4mJRIUwqgE8D_Z2znANEbtiz4GhI4M8NQ&usqp=CAU"
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpd4mJRIUwqgE8D_Z2znANEbtiz4GhI4M8NQ&usqp=CAU",
   );
   const [timeout, setTimeOut] = useState(false);
   const students = "Students";
@@ -42,10 +43,13 @@ const SignIn = ({
 
   useEffect(() => {
     // getUsers(accessToken);
+    getUserImage();
     setTimeout(() => {
       setTimeOut(true);
-    }, 500000);
+    }, 100000);
   }, []);
+
+  const getUserImage = () => {};
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -57,7 +61,7 @@ const SignIn = ({
   const onChangeHandler = (event) => {
     setImage(event.target.files[0]);
     setImagePicker(URL.createObjectURL(event.target.files[0]));
-    localStorage.setItem('image',URL.createObjectURL(event.target.files[0]))
+    localStorage.setItem("image", URL.createObjectURL(event.target.files[0]));
   };
 
   const fielUploadHandler = (event) => {
@@ -66,11 +70,15 @@ const SignIn = ({
     axios
       .post(`${API}/api/user/upload`, formData, {
         headers: {
-          Authorization: `${Bearer} ${localStorage.getItem("token") || GoogleLogin.Authorization}`,
+          Authorization: `${Bearer} ${
+            localStorage.getItem("token") || GoogleLogin.Authorization
+          }`,
         },
       })
       .then((res) => {
+        console.log(res)
         msg = res.data.message;
+        Swal.fire('Successfully Uploaded')
       });
   };
 
@@ -91,11 +99,11 @@ const SignIn = ({
       <AlertMessageShower timeout={timeout} />
 
       {/* <SessionExpirationModal/> */}
-      <div class="row">
-        <div class="col text-center">
+      <div className="row">
+        <div className="col text-center">
           <img
             src={image}
-            class="rounded-circle"
+            className="rounded-circle"
             alt="Cinque Terre"
             width="230"
             height="200"
@@ -221,5 +229,5 @@ const mapStateToProps = (state) => ({
   authToken: state.auth.data,
 });
 export default connect(mapStateToProps, { roommed, getRoomData, getUsers })(
-  SignIn
+  SignIn,
 );

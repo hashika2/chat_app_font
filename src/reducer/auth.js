@@ -22,15 +22,15 @@ export default function (state = initialesState, action) {
     case "GOOGLE_SIGNIN":
       return {
         ...state,
-        token:action.payload,
+        token: action.payload,
         data: action.payload,
         isAuthenticated: true,
       };
     case "LOGIN_FAIL":
-      return{
+      return {
         ...state,
-        data:action.payload
-      }
+        data: action.payload,
+      };
 
     default:
       return state;
