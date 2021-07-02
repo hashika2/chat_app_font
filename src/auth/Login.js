@@ -33,7 +33,6 @@ const Login = ({ login, isAuthenticated,alert,data }) => {
   
   return (
     <Fragment>
-      
       {/* <IdleTimeOut/> */}
       <div className ="container" style={{backgroundColor:"black"}}>
         <div className="card" style={{marginTop:"20%"}}>
