@@ -3,6 +3,8 @@ import { Link, Redirect, useHistory } from "react-router-dom";
 import { roommed } from "../../action/index";
 import { connect } from "react-redux";
 import queryString from "query-string";
+import GoogleLogin from "react-google-login";
+import Swal from 'sweetalert2'
 import axios from "axios";
 import { getRoomData } from "../../action/index";
 import ImageUploading from "react-images-uploading";
@@ -23,6 +25,9 @@ const SignIn = ({
   const [room, setRoom] = useState("");
   const [selectedImage, setImage] = useState("");
   const [pictures, setPicture] = useState([]);
+  const [image, setImagePicker] = useState(
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpd4mJRIUwqgE8D_Z2znANEbtiz4GhI4M8NQ&usqp=CAU",
+  );
   const [timeout, setTimeOut] = useState(false);
   const students = "Students";
   const officers = "Officers";
@@ -38,10 +43,13 @@ const SignIn = ({
 
   useEffect(() => {
     // getUsers(accessToken);
+    getUserImage();
     setTimeout(() => {
       setTimeOut(true);
-    }, 10000);
+    }, 100000);
   }, []);
+
+  const getUserImage = () => {};
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -52,6 +60,8 @@ const SignIn = ({
 
   const onChangeHandler = (event) => {
     setImage(event.target.files[0]);
+    setImagePicker(URL.createObjectURL(event.target.files[0]));
+    localStorage.setItem("image", URL.createObjectURL(event.target.files[0]));
   };
 
   const fielUploadHandler = (event) => {
@@ -60,11 +70,15 @@ const SignIn = ({
     axios
       .post(`${API}/api/user/upload`, formData, {
         headers: {
-          Authorization: `${Bearer} ${localStorage.getItem("token")}`,
+          Authorization: `${Bearer} ${
+            localStorage.getItem("token") || GoogleLogin.Authorization
+          }`,
         },
       })
       .then((res) => {
+        console.log(res)
         msg = res.data.message;
+        Swal.fire('Successfully Uploaded')
       });
   };
 
@@ -83,10 +97,23 @@ const SignIn = ({
   return (
     <Fragment>
       <AlertMessageShower timeout={timeout} />
-      <Link to={"/"} onClick={setLogout} className="">
-        Sign Out
-      </Link>
+
       {/* <SessionExpirationModal/> */}
+      <div className="row">
+        <div className="col text-center">
+          <img
+            src={image}
+            className="rounded-circle"
+            alt="Cinque Terre"
+            width="230"
+            height="200"
+          />
+          <br></br>
+          <Link to={"/"} onClick={setLogout} className="">
+            Sign Out
+          </Link>
+        </div>
+      </div>
       <div className="row">
         {/* <div className="col-md-8"></div> */}
         <div className="col-sm-7 pr-2">
@@ -198,9 +225,9 @@ const SignIn = ({
   );
 };
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.registeredRoom,
+  isAuthenticated: state.auth.isAuthenticated,
   authToken: state.auth.data,
 });
 export default connect(mapStateToProps, { roommed, getRoomData, getUsers })(
-  SignIn
+  SignIn,
 );

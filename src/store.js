@@ -11,7 +11,7 @@ const middleware = [thunk];
 const store = createStore(
   rootReducer,
   initialState,
-  composeWithDevTools(applyMiddleware(...middleware))
+  composeWithDevTools(applyMiddleware(...middleware)),
 );
 
 // set up a store subscription listener
@@ -29,7 +29,7 @@ store.subscribe(() => {
     // setAuthToken(token);
   }
   localStorage.setItem("token", currentState.auth.token);
-  // localStorage.setItem("token",previousState.auth.token)
+  // localStorage.setItem("token",previousState.auth.token.user)
 });
 
 export default store;

@@ -20,10 +20,10 @@ const App = () => {
         <Alert />
         <Route path="/register" exact component={Register} />
         {/* <PersistGate loading={null} persistor={persistStore(store)}> */}
-          <PrivateRoute path="/join" exact component={Join} />
+        <Route path="/join" exact component={Join} />
         {/* </PersistGate> */}
-          <PrivateRoute path="/chat" exact component={Chat} />
-          <PrivateRoute path="/privateChat" exact component={PrivateChat} />
+        <Route path="/chat" exact component={Chat} />
+        <Route path="/privateChat" exact component={PrivateChat} />
       </Router>
     </Provider>
   );
