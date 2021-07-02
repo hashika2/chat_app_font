@@ -32,7 +32,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
   };
   try {
     const res = await axios.post(`${environment.baseUrl}/user`, body, config);
-
+    console.log(res);
     dispatch({
       type: USER_REGISTERED,
       payload: res.data,
@@ -68,14 +68,15 @@ export const login = ({ email, password }) => async (dispatch) => {
     });
     dispatch(setAlert("login Successfull", "success"));
   } catch (error) {
-    if (error.response.status === 400) {
+    if (error) {
+      error.Error
+        ? dispatch(setAlert("Invalid Inputs", "danger"))
+        : dispatch(setAlert("Server Error", "danger"));
+      // error.response & !error.response.status == null & (error.response.status === 400)
+      //   ? dispatch(setAlert("Invalid Inputs", "danger"))
+      //   : dispatch(setAlert("server Error", "danger"));
+    } else {
       dispatch(setAlert(error.response.data.error, "danger"));
-    }
-    if (error.response.status === 404) {
-      dispatch(setAlert("Invalid Inputs", "danger"));
-    }
-     else {
-      // dispatch(setAlert(error.response.data.error, "danger"));
     }
   }
 };

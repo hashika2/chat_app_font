@@ -1,31 +1,27 @@
 import React, { useState } from "react";
 import { Alert } from "reactstrap";
 import { useHistory } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 const AlertMessageShower = ({ timeout }) => {
   const [timeOut, setTime] = useState(timeout);
   const history = useHistory();
 
   const setLogin = () => {
+    console.log("*********")
     setTime(false);
     localStorage.removeItem("token");
     history.push("/");
   };
+  document.createElement('swal2-confirm').addEventListener('click',setLogin)
 
   if (timeout) {
-    return (
-      <Alert severity="warning">
-        This is an error alert — <strong>Session Expired</strong>
-        <br></br>
-        <input
-          type="submit"
-          className="btn btn-primary"
-          value="login"
-          onClick={setLogin}
-        />
-        <input type="submit" className="btn btn-danger" value="close" />
-      </Alert>
-    );
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something went wrong!',
+      footer: `<button>Login</button>`
+    })
   }
   return null;
 };

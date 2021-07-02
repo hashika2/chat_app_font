@@ -43,13 +43,10 @@ const SignIn = ({
 
   useEffect(() => {
     // getUsers(accessToken);
-    getUserImage();
-    setTimeout(() => {
-      setTimeOut(true);
-    }, 100000);
+    // setTimeout(() => {
+    //   setTimeOut(true);
+    // }, 1000000);
   }, []);
-
-  const getUserImage = () => {};
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -97,7 +94,6 @@ const SignIn = ({
   return (
     <Fragment>
       <AlertMessageShower timeout={timeout} />
-
       {/* <SessionExpirationModal/> */}
       <div className="row">
         <div className="col text-center">

@@ -30,6 +30,8 @@ const Login = ({ login, googleSignIn, isAuthenticated, alert, data }) => {
   };
 
   const setAlert = (alert) => {
+    console.log(`alert is ${alert}`);
+    setLoading(false);
     if (alert.alertType === "danger") {
       error = alert.msg;
       setError(true);
@@ -47,11 +49,11 @@ const Login = ({ login, googleSignIn, isAuthenticated, alert, data }) => {
   }
 
   const responseGoogle = async (response) => {
-    //   var res = response.profileObj;
-    //   localStorage.setItem('email',res.email)
-    //   setFormData({...formData,[email]:res.email})
-    //   googleSignIn(await response.accessToken);
-    //   history.push(`/join?email=${res.email}`);
+    var res = response.profileObj;
+    localStorage.setItem("email", res.email);
+    setFormData({ ...formData, [email]: res.email });
+    googleSignIn(await response.accessToken);
+    history.push(`/join?email=${res.email}`);
   };
 
   return (

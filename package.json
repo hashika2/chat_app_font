@@ -24,7 +24,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "socket.io-client": "^2.2.0",
-    "sweetalert2": "^10.15.6"
+    "sweetalert2": "^11.0.16"
   },
   "scripts": {
     "start": "react-scripts start",

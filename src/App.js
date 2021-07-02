@@ -11,6 +11,9 @@ import Register from "./auth/Register";
 import Login from "./auth/Login";
 import PrivateChat from "./components/Chat/PrivateChat/PrivateChat";
 import Alert from "./components/Layout/Alert";
+import Profile from "./components/profile/Profile";
+import ResetPassword from "./auth/ResetPassword";
+import ConfirmPassword from "./auth/ConfirmPassword";
 
 const App = () => {
   return (
@@ -24,6 +27,9 @@ const App = () => {
         {/* </PersistGate> */}
         <Route path="/chat" exact component={Chat} />
         <Route path="/privateChat" exact component={PrivateChat} />
+        <Route path="/resetPassword" exact component={ResetPassword} />
+        <Route path="/confirmPassword" exact component={ConfirmPassword} />
+        <Route path="/profile" exact component= {Profile}/>
       </Router>
     </Provider>
   );
